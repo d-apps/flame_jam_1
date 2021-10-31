@@ -5,10 +5,24 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 void main() async {
+
   WidgetsFlutterBinding.ensureInitialized();
-  await Flame.device.fullScreen();
   await Flame.device.setLandscapeRightOnly();
+  await Flame.device.fullScreen();
+
+  await Flame.images.loadAll(
+      [
+        "cat.png",
+        "monster_1.png",
+        "monster_2.png",
+        "monster_3.png",
+        "monster_4.png",
+        "pumpkin.png",
+      ]
+  );
+
   runApp(GameWrapper());
+
 }
 
 class GameWrapper extends StatelessWidget {
@@ -17,7 +31,10 @@ class GameWrapper extends StatelessWidget {
   Widget build(BuildContext context) {
     return GetMaterialApp(
       home: GameWidget(
-          game: FlameJam1Game()
+          game: FlameJam1Game(),
+          overlayBuilderMap: {
+            "Pause" : (context, _) => Container(),
+          },
       ),
     );
   }
