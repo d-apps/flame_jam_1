@@ -6,8 +6,8 @@ class PumpkinComponent extends SpriteComponent {
   final double x;
   final double y;
 
-  final double width = Get.width * 0.25;
-  final double height = Get.height * 0.30;
+  final double width = Get.width * 0.20;
+  final double height = Get.height * 0.25;
 
   PumpkinComponent({required this.x, required this.y});
 
