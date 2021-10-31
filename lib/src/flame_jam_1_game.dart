@@ -1,12 +1,16 @@
 import 'package:flame/components.dart';
 import 'package:flame/game.dart';
 import 'package:flame/input.dart';
+import 'package:flame_audio/flame_audio.dart';
+import 'package:flame_jam_1/src/components/background_component.dart';
+import 'package:flame_jam_1/src/components/game_over_component.dart';
 import 'package:flame_jam_1/src/components/monster_component.dart';
-import 'package:flame_jam_1/src/components/pumpkin_character_component.dart';
 import 'package:flame_jam_1/src/components/pumpkin_component.dart';
+import 'package:flame_jam_1/src/widgets/potions_widget_controller.dart';
+import 'package:flame_jam_1/src/widgets/score_widget_controller.dart';
 import 'package:get/get.dart';
 
-class FlameJam1Game extends FlameGame with HasTappableComponents{
+class FlameJam1Game extends FlameGame with HasTappableComponents {
 
   final double pumpkinFirstRowY = Get.height / 5;
   final double pumpkinSecondRowY = Get.height / 1.6;
@@ -16,13 +20,27 @@ class FlameJam1Game extends FlameGame with HasTappableComponents{
   final double firstRowY = Get.height * 0.33;
   final double secondRowY = Get.height * 0.73;
 
-  int score = 0;
   double timeout = 5;
+
+  int get score => Get.find<ScoreWidgetController>().score.value;
 
   @override
   Future<void>? onLoad() {
 
-    pumpkinComponents.addAll([
+    return super.onLoad();
+  }
+
+  void startGame(){
+
+    FlameAudio.bgm.stop();
+    FlameAudio.bgm.play("game_audio.wav", volume: 0.3);
+
+    add(BackgroundComponent());
+
+    overlays.add("Score");
+    overlays.add("Potions");
+
+    pumpkinComponents.assignAll([
       PumpkinComponent(x: Get.width * 0.27, y: firstRowY),
       PumpkinComponent(x: Get.width * 0.50, y: firstRowY),
       PumpkinComponent(x: Get.width * 0.73, y: firstRowY),
@@ -39,19 +57,59 @@ class FlameJam1Game extends FlameGame with HasTappableComponents{
 
     });
 
-    return super.onLoad();
+    overlays.add("Back Button");
+
   }
 
   @override
   void update(double dt) {
-    checkScoreToIncrease();
+
+    checkScoreToIncreaseTimeout();
+
+    if(Get.find<PotionsWidgetController>().potions <= 0){
+      gameOver();
+    }
+
     super.update(dt);
   }
 
-  void checkScoreToIncrease(){
+  void clearAll(){
 
-    print(score);
-    print(timeout);
+    overlays.remove("Score");
+    overlays.remove("Potions");
+    overlays.remove("Back Button");
+
+    children.clear();
+
+    Get.find<ScoreWidgetController>().reset();
+    Get.find<PotionsWidgetController>().resetPotions();
+
+  }
+
+  void gameOver(){
+    clearAll();
+    add(GameOverComponent());
+    overlays.add("Back Button");
+  }
+
+  void restartGame(){
+
+    clearAll();
+    startGame();
+
+  }
+
+  void backToMainScreen(){
+
+    clearAll();
+    overlays.add("Main Menu");
+
+  }
+
+  void checkScoreToIncreaseTimeout(){
+
+    //print(score);
+    //print(timeout);
 
     if(score >= 100 && score <= 200){
       timeout = 4;
