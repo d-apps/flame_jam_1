@@ -83,6 +83,7 @@ class FlameJam1Game extends FlameGame with HasTappableComponents {
 
     Get.find<ScoreWidgetController>().reset();
     Get.find<PotionsWidgetController>().resetPotions();
+    timeout = 5;
 
   }
 

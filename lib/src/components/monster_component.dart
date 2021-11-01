@@ -147,7 +147,4 @@ class MonsterComponent extends SpriteComponent with HasGameRef<FlameJam1Game>, T
     return super.onTapDown(info);
   }
 
-  double _nextDouble(int max) => random.nextDouble() * max;
-  double _nextInt(int min, int max) => random.nextInt(max - min).toDouble();
-
 }
