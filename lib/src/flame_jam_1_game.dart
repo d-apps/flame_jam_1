@@ -24,12 +24,6 @@ class FlameJam1Game extends FlameGame with HasTappableComponents {
 
   int get score => Get.find<ScoreWidgetController>().score.value;
 
-  @override
-  Future<void>? onLoad() {
-
-    return super.onLoad();
-  }
-
   void startGame(){
 
     FlameAudio.bgm.stop();
